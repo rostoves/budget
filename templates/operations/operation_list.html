@@ -1,0 +1,84 @@
+{% extends "index.html" %}
+
+{% block title %}Operations List{% endblock %}
+
+{% block content %}
+    <h1>Operations List</h1>
+    <div class="operationsListTable">
+        {% if operation_list %}
+        <div class="operationsListTableHeader badge-primary">
+            <span>ID</span>
+            <span>Статус</span>
+            <span>Дата</span>
+            <span>Сумма</span>
+            <span>Счет</span>
+            <span>Описание</span>
+            <span>MCC</span>
+            <span>Категория</span>
+            <span>Тип</span>
+            <span>Комментарий</span>
+        </div>
+        {% else %}
+        <span>None operations in the database with such parameters</span>
+        {% endif %}
+        {% for operation in operation_list %}
+            <div class="operationsListTableRow" id="row_{{ row.id }}">
+                <span>{{ operation.id }}</span>
+                <span>{{ operation.status }}</span>
+                <input class="operationListDate" id="date_{{ operation.id }}" value="{{ operation.date }}">
+                <input class="operationListSum" id="sum_{{ operation.id }}" value="{{ operation.bargain_sum }}">
+                <span>{{ operation.account }}</span>
+                <span>{{ operation.description }}</span>
+                <span>{{ operation.merchant_code }}</span>
+<!--                <select class="operationListMccSelect" id="select_{{ operation.id }}">-->
+<!--                    <option value></option>-->
+<!--                    {% for column in mcc_list %}-->
+<!--                    <option {% if column.id == row.mcc_id %}selected{% endif %} value="{{ column.id }}">{{ column.name }}</option>-->
+<!--                    {% endfor %}-->
+<!--                </select>-->
+                <span>{{ operation.merchant_code.category }}</span>
+                <span>{{ operation.merchant_code.category.type }}</span>
+                <input class="operationListComment" id="comment_{{ operation.id }}" value="{% if operation.comment %}{{ operation.comment }}{% endif %}">
+                <button type="button" class="deleteOperationButton" id="d{{ operation.id }}" data-toggle="modal" data-target="#deleteOperationModal">Удалить</button>
+            </div>
+        {% endfor %}
+        {% if is_paginated %}
+            <div class="pagination">
+                <span class="page-links">
+                    {% if page_obj.has_previous %}
+                        <a href="/operations?page=1">&laquo; first</a>
+                        <a href="/operations?page={{ page_obj.previous_page_number }}">previous</a>
+                    {% endif %}
+                    <span class="page-current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                    </span>
+                    {% if page_obj.has_next %}
+                        <a href="/operations?page={{ page_obj.next_page_number }}">next</a>
+                        <a href="/operations?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="deleteOperationModal" tabindex="-1" role="dialog" aria-labelledby="deleteOperationModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteOperationModalLabel">Deleting operation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Do you really want to delete the operation?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Nope</button>
+                    <button type="button" class="btn btn-danger deleteOperationModalButton" id="deleteOperationModalButton" data-dismiss="modal">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

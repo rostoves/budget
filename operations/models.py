@@ -22,5 +22,5 @@ class Operation(models.Model):
     merchant_code = models.ForeignKey('categories.MerchantCode', on_delete=models.PROTECT, related_name='mcc')
     description = models.ForeignKey('categories.Description', on_delete=models.SET_NULL, null=True,
                                     related_name='description')
-    comment = models.CharField(max_length=128)
+    comment = models.CharField(max_length=128, blank=True, null=True)
     import_date = models.DateTimeField(default=timezone.now)
