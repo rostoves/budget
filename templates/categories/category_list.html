@@ -1,0 +1,12 @@
+{% extends "index.html" %}
+
+{% block title %}Categories List{% endblock %}
+
+{% block content %}
+    <h1>Categories List</h1>
+    <ul>
+    {% for category in category_list %}
+        <li>{{ category.id }} - {{ category.name }} - {{ category.type.name }}</li>
+    {% endfor %}
+    </ul>
+{% endblock %}

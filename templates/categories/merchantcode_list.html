@@ -1,0 +1,12 @@
+{% extends "index.html" %}
+
+{% block title %}Merchant Codes List{% endblock %}
+
+{% block content %}
+    <h1>Merchant Codes List</h1>
+    <ul>
+    {% for mcc in merchantcode_list %}
+        <li>{{ mcc.id }} - {{ mcc.name }} - {{ mcc.category.name }}</li>
+    {% endfor %}
+    </ul>
+{% endblock %}

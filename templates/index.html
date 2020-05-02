@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="{% static 'css/budget.css' %}">
+    {% block styles %}{% endblock %}
+
+    <script src="https://code.jquery.com/jquery-3.5.0.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+    {% block scripts %}{% endblock %}
+
+    <title>{% block title %} Budget {% endblock %}</title>
+</head>
+<body>
+    <nav>
+        <a href="{% url 'categories:types' %}">Types</a>
+        <a href="{% url 'categories:categories' %}">Categories</a>
+        <a href="{% url 'categories:mcc' %}">Merchant Codes</a>
+        <a href="{% url 'categories:descriptions' %}">Descriptions</a>
+        <a href="{% url 'import_data:import_csv' %}">Import</a>
+    </nav>
+    {% block content %}
+
+    {% endblock %}
+</body>
+</html>

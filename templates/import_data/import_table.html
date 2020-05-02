@@ -1,0 +1,47 @@
+{% extends "index.html" %}
+{% load static %}
+
+{% block scripts %}
+    <script src="{% static 'js/import.js' %}"></script>
+{% endblock %}
+
+{% block title %}Import Table{% endblock %}
+
+{% block content %}
+    <h1>Import Table</h1>
+    <div class="importTable">
+        <div class='importTableHeader badge-primary'>
+            <span>Дата</span>
+            <span>Счет</span>
+            <span>Статус</span>
+            <span>Сумма операции</span>
+            <span>Валюта операции</span>
+            <span>Сумма платежа</span>
+            <span>Валюта платежа</span>
+            <span>Категория</span>
+            <span>Описание</span>
+            <span>Комментарий</span>
+            <span></span>
+            <span></span>
+        </div>
+    {% for row in table %}
+        <div class='importTableRow' id="row_{{ forloop.counter }}">
+            <input class="date" type='text' id="date_{{ forloop.counter }}" value='{{ row.date }}'>
+            <span class="account" id="acc_{{ forloop.counter }}">{{ row.account }}</span>
+            <span class="status" id="status_{{ forloop.counter }}">{{ row.status }}</span>
+            <input class="operation_sum" type="text" id="op_sum_{{ forloop.counter }}" value="{{ row.operation_sum }}">
+            <span class="operation_cur" id="op_cur_{{ forloop.counter }}">{{ row.operation_cur }}</span>
+            <input class="bargain_sum" type="text" id="bar_sum_{{ forloop.counter }}" value="{{ row.bargain_sum }}">
+            <span class="bargain_cur" id="bar_cur_{{ forloop.counter }}">{{ row.bargain_cur }}</span>
+            <input class="merchant_code importMcc" type="text" id="mcc_{{ forloop.counter }}" value="{{ row.merchant_code_matched }}">
+            <input class="description" type="text" id="desc_{{ forloop.counter }}" value="{{ row.description }}">
+            <input class="comment" type="text" placeholder="Комментарий">
+            <button class='splitImportRowButton' id="split_{{ forloop.counter }}">Разделить</button>
+            <button class='deleteImportRowButton' id="delete_{{ forloop.counter }}">Удалить</button>
+        </div>
+    {% endfor %}
+    </div>
+    <div class="importButtonForm">
+        <input type='submit' class='importTableButton' value='Импорт операций'>
+    </div>
+{% endblock %}
