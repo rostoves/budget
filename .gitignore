@@ -1,0 +1,11 @@
+/_logs/
+/budget/__pycache__/
+/categories/__pycache__/
+/categories/migrations/__pycache__/
+/dashboard/__pycache__/
+/dashboard/migrations/__pycache__/
+/import_data/__pycache__/
+/import_data/migrations/__pycache__/
+/operations/__pycache__/
+/operations/migrations/__pycache__/
+*.sqlite3
