@@ -9,3 +9,4 @@
 /operations/__pycache__/
 /operations/migrations/__pycache__/
 *.sqlite3
+/budget/settings.py
