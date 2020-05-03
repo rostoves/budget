@@ -2,8 +2,9 @@
 
 {% block title %}Types List{% endblock %}
 
+{% block content-title %}Types List{% endblock %}
+
 {% block content %}
-    <h1>Types List</h1>
     <ul>
     {% for type in type_list %}
         <li>{{ type.id }} - {{ type.name }}</li>

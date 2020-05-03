@@ -152,7 +152,7 @@ def get_column(model, column):
     if model == 'MerchantCode':
         objects = c_models.MerchantCode.objects
 
-    for result in list(objects.values(column)):
+    for result in list(objects.values(column).distinct()):
         array.append(result[column])
 
     return array

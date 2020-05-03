@@ -5,29 +5,42 @@
 <head>
     <meta charset="UTF-8">
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="{% static 'bootstrap-4.4.1-dist/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'jquery/jquery-ui-themes-1.12.1/themes/base/jquery-ui.css' %}">
     <link rel="stylesheet" href="{% static 'css/budget.css' %}">
     {% block styles %}{% endblock %}
 
-    <script src="https://code.jquery.com/jquery-3.5.0.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+    <script src="{% static 'jquery/jquery-3.5.0.min.js' %}"></script>
+    <script src="{% static 'jquery/jquery-ui-1.12.1/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'bootstrap-4.4.1-dist/js/bootstrap.min.js' %}"></script>
     <script src="{% static 'js/script.js' %}"></script>
     {% block scripts %}{% endblock %}
 
     <title>{% block title %} Budget {% endblock %}</title>
 </head>
 <body>
-    <nav>
-        <a href="{% url 'categories:types' %}">Types</a>
-        <a href="{% url 'categories:categories' %}">Categories</a>
-        <a href="{% url 'categories:mcc' %}">Merchant Codes</a>
-        <a href="{% url 'categories:descriptions' %}">Descriptions</a>
-        <a href="{% url 'import_data:import_csv' %}">Import</a>
-        <a href="{% url 'operations:operations' %}">Operations</a>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="{% url 'dashboard:index' %}">Budget</a>
+    <div class="navbar-nav">
+        <a class="nav-item nav-link" href="{% url 'operations:operations' %}">Operations</a>
+        <a class="nav-item nav-link" href="{% url 'import_data:import_csv' %}">Import</a>
+        <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Categories
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="{% url 'categories:categories' %}">Categories</a>
+              <a class="dropdown-item" href="{% url 'categories:types' %}">Types</a>
+              <a class="dropdown-item" href="{% url 'categories:mcc' %}">Merchant Codes</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="{% url 'categories:descriptions' %}">Descriptions</a>
+            </div>
+        </div>
+    </div>
     </nav>
-    {% block content %}
-
-    {% endblock %}
+    <h4 class="pageHeader">{% block content-title %}{% endblock %}</h4>
+    <div>
+        {% block content %}{% endblock %}
+    </div>
 </body>
 </html>

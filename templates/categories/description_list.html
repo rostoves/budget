@@ -2,8 +2,9 @@
 
 {% block title %}Descriptions List{% endblock %}
 
+{% block content-title %}Descriptions List{% endblock %}
+
 {% block content %}
-    <h1>Descriptions List</h1>
     <ul>
     {% for description in description_list %}
         <li>{{ description.id }} - {{ description.name }} - {{ description.merchant_code }}</li>

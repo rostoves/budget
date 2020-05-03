@@ -2,8 +2,9 @@
 
 {% block title %}Import{% endblock %}
 
+{% block content-title %}{% endblock %}
+
 {% block content %}
-    <h1>Import</h1>
     <form class="importButtonForm" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}

@@ -9,4 +9,5 @@
 /operations/__pycache__/
 /operations/migrations/__pycache__/
 *.sqlite3
-/budget/settings.py
+/static/bootstrap-4.4.1-dist/
+/static/jquery/
