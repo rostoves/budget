@@ -2,6 +2,7 @@ import logging
 from django.shortcuts import render
 from django.views.generic import (TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView)
 from django.core.paginator import Paginator
+from django.http import JsonResponse
 from operations import (models as o_models, forms)
 from categories import models as c_models
 
@@ -11,6 +12,17 @@ logger = logging.getLogger('django')
 class OperationListView(ListView):
     model = o_models.Operation
     paginate_by = 50
+
+    def post(self, request, *args, **kwargs):
+        # print(request.POST)
+        if request.is_ajax():
+            if request.POST['action'] == 'delete_operation':
+                result = delete_object('Operation', request.POST['data'].replace('"', ""))
+                return JsonResponse({'result': result})
+            if request.POST['action'] == 'update_operation':
+                result = update_object('Operation', {'id': request.POST['id']},
+                                       {request.POST['field']: request.POST['new_value']})
+                return JsonResponse({'rows_updated': result})
 
     def get_filters(self):
         # print(self.request.GET)
@@ -46,18 +58,18 @@ class OperationListView(ListView):
 
             filter_args['merchant_code__in'] = filter_arr
 
-        print(filter_args)
+        # print(filter_args)
         return filter_args
 
     def get_queryset(self):
         filter_args = self.get_filters()
 
         if self.request.GET.get('orderby') == 'ASC':
-            new_context = o_models.Operation.objects.filter(
+            new_context = self.model.objects.filter(
                 **filter_args
             ).order_by('date')
         else:
-            new_context = o_models.Operation.objects.filter(
+            new_context = self.model.objects.filter(
                 **filter_args
             ).order_by('-date')
 
@@ -65,6 +77,7 @@ class OperationListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(OperationListView, self).get_context_data(**kwargs)
+        context['model_name'] = self.model.__name__
         context['status'] = get_column('Operation', 'status')
         context['merchant_code'] = get_row_and_id('MerchantCode', 'name')
         context['category'] = get_row_and_id('Category', 'name')
@@ -88,6 +101,35 @@ class OperationsView(OperationListView):
             return render(request, 'operations/operation_list.html', {'operation_list': operation_list_page,
                                                                       'page_obj': page_obj})
         return super().get(request, *args, **kwargs)
+
+
+def update_object(model, filters, updates):
+    logger.info('Requested update for ' + model)
+    for k, v in filters.items():
+        logger.info('Objects to update: where ' + k + ' = ' + v)
+    for k, v in updates.items():
+        logger.info('Field to update: ' + k + ' to ' + v)
+    objects = None
+    if model == 'MerchantCode':
+        objects = c_models.MerchantCode.objects
+    if model == 'Operation':
+        objects = o_models.Operation.objects
+
+    result = objects.filter(**filters).update(**updates)
+    logger.info('Updated number of objects: ' + str(result))
+    return result
+
+
+def delete_object(model, pk):
+    logger.warning('Requested deletion of pk=' + pk + ' from ' + model)
+    objects = None
+    if model == 'Operation':
+        objects = o_models.Operation.objects
+
+    result = objects.get(pk=pk).delete()[1]
+    for k, v in result.items():
+        logger.warning('Deleted from ' + k + '. Number of items: ' + str(v))
+    return result
 
 
 def get_column(model, column):
@@ -116,7 +158,7 @@ def get_row_and_id(model, column):
     if model == 'Type':
         objects = c_models.Type.objects
 
-    for result in list(objects.values(column, 'id').distinct()):
+    for result in list(objects.values(column, 'id').order_by(column).distinct()):
         array[result['id']] = result[column]
 
     return array
