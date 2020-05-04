@@ -12,9 +12,6 @@
         <span>Тип</span>
         <span>Комментарий</span>
     </div>
-    {% else %}
-    <span>None operations in the database with such parameters</span>
-    {% endif %}
     {% for operation in operation_list %}
         <div class="operationsListTableRow" id="row_{{ operation.id }}">
             <span>{{ operation.id }}</span>
@@ -24,12 +21,6 @@
             <span>{{ operation.account }}</span>
             <span>{{ operation.description }}</span>
             <span>{{ operation.merchant_code }}</span>
-<!--                <select class="operationListMccSelect" id="select_{{ operation.id }}">-->
-<!--                    <option value></option>-->
-<!--                    {% for column in mcc_list %}-->
-<!--                    <option {% if column.id == row.mcc_id %}selected{% endif %} value="{{ column.id }}">{{ column.name }}</option>-->
-<!--                    {% endfor %}-->
-<!--                </select>-->
             <span>{{ operation.merchant_code.category }}</span>
             <span>{{ operation.merchant_code.category.type }}</span>
             <input class="operationListComment" id="comment_{{ operation.id }}" value="{% if operation.comment %}{{ operation.comment }}{% endif %}">
@@ -39,24 +30,27 @@
     <nav aria-label="footer-pagination">
         <ul class="pagination pagination-sm justify-content-center">
             {% if 1 != page_obj.previous_page_number %}
-            <li class="page-item"><a class="page-link badge-dark" href="/operations?page=1">1</a></li>
+            <li class="page-item"><a class="page-link operationListPage" id="page_1">1</a></li>
             {% endif %}
             {% if page_obj.previous_page_number != 2 and page_obj.number != 2 %}
-            <li class="page-item"><span class="page-link badge-dark" href="">...</span></li>
+            <li class="page-item"><span class="page-link" >...</span></li>
             {% endif %}
             {% if page_obj.has_previous %}
-            <li class="page-item"><a class="page-link badge-dark" href="/operations?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a></li>
+            <li class="page-item"><a class="page-link operationListPage" id="page_{{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a></li>
             {% endif %}
-            <li class="page-item"><a class="page-link badge-secondary" href="">{{ page_obj.number }}</a></li>
+            <li class="page-item"><a class="page-link badge-secondary operationListPage currentListPage" id="page_{{ page_obj.number }}">{{ page_obj.number }}</a></li>
             {% if page_obj.has_next %}
-            <li class="page-item"><a class="page-link badge-dark" href="/operations?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a></li>
+            <li class="page-item"><a class="page-link operationListPage" id="page_{{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a></li>
             {% endif %}
             {% if page_obj.next_page_number != page_obj.paginator.num_pages|add:"-1" and page_obj.number != page_obj.paginator.num_pages|add:"-1" %}
-            <li class="page-item"><span class="page-link badge-dark" href="">...</span></li>
+            <li class="page-item"><span class="page-link">...</span></li>
             {% endif %}
             {% if page_obj.paginator.num_pages != page_obj.next_page_number %}
-            <li class="page-item"><a class="page-link badge-dark" href="/operations?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a></li>
+            <li class="page-item"><a class="page-link operationListPage" id="page_{{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a></li>
             {% endif %}
         </ul>
     </nav>
+    {% else %}
+    <span>None operations in the database with such parameters</span>
+    {% endif %}
 </div>
