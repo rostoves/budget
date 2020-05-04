@@ -1,13 +1,27 @@
 {% extends "index.html" %}
+{% load static %}
 
-{% block title %}Categories List{% endblock %}
+{% block scripts %}
+    <script src="{% static 'js/categories.js' %}"></script>
+{% endblock %}
 
-{% block content-title %}Categories List{% endblock %}
+{% block title %}{{ model_name }} List{% endblock %}
+
+{% block content-title %}{{ model_name }} List{% endblock %}
 
 {% block content %}
-    <ul>
-    {% for category in category_list %}
-        <li>{{ category.id }} - {{ category.name }} - {{ category.type.name }}</li>
+    {% for object in object_list %}
+        <div class="comparisonBlock" id="obj_{{ object.id }}">
+            <input class="comparisonBlockName" id="obj_name_{{ object.id }}" value="{{ object.name }}">
+            <select class="comparisonBlockSelect" id="obj_cat_{{ object.id }}">
+                {% for comparison in comparison_list %}
+                <option {% if comparison.name == object.type.name %}selected{% endif %} value="{{ comparison.id }}">{{ comparison.name }}</option>
+                {% endfor %}
+            </select>
+            <button type="button" class="comparisonBlockDeleteButton" id="delete_{{ object.id }}" data-toggle="modal" data-target="#deleteModal">Удалить</button>
+        </div>
     {% endfor %}
-    </ul>
+
+    <!-- Modal -->
+    {% include "object_delete_with_replacement.html" %}
 {% endblock %}

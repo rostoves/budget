@@ -34,6 +34,23 @@ function sendPOST(_url, _action, _data = undefined, callback = undefined) {
     });
 }
 
+function sendFieldUpdate(_url, _action, _rowId, _field, _newValue) {
+    console.log(_action, _rowId, _field, _newValue);
+    $.ajax({
+        url: _url,
+        type: "POST",
+        dataType: "json",
+        headers: {'X-CSRFToken': csrftoken},
+        data: {
+            action: _action,
+            id: _rowId,
+            field: _field,
+            new_value: _newValue
+        },
+        success: function (data) {}
+    });
+}
+
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie !== '') {

@@ -1,0 +1,31 @@
+<!-- Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Deleting {{ model_name }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Do you really want to delete the {{ model_name }}?</p>
+                <div class="form-group row">
+                    <label for="newObjectSelect" class="col-sm-6 col-form-label">Choose new {{ model_name }}</label>
+                    <div class="col-sm-6">
+                        <select class="form-control" id="newObjectSelect">
+                            <option selected value> -- choose -- </option>
+                            {% for object in object_list %}
+                            <option value="{{ object.id }}">{{ object.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Nope</button>
+                <button type="button" class="btn btn-danger" id="deleteObjectModalButton" data-dismiss="modal">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>

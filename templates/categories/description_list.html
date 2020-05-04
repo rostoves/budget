@@ -1,13 +1,38 @@
-{% extends "index.html" %}
-
-{% block title %}Descriptions List{% endblock %}
-
-{% block content-title %}Descriptions List{% endblock %}
-
-{% block content %}
-    <ul>
-    {% for description in description_list %}
-        <li>{{ description.id }} - {{ description.name }} - {{ description.merchant_code }}</li>
+{% if object_list %}
+    {% for object in object_list %}
+    <div class="comparisonBlock" id="obj_{{ object.id }}">
+        <input class="comparisonBlockName" id="obj_name_{{ object.id }}" value="{{ object.name }}">
+        <select class="comparisonBlockSelect" id="obj_cat_{{ object.id }}">
+            {% for comparison in comparison_list %}
+            <option {% if comparison.name == object.merchant_code.name %}selected{% endif %} value="{{ comparison.id }}">{{ comparison.name }}</option>
+            {% endfor %}
+        </select>
+        <button type="button" class="comparisonBlockDeleteButton" id="delete_{{ object.id }}" data-toggle="modal" data-target="#deleteModal">Удалить</button>
+    </div>
     {% endfor %}
-    </ul>
-{% endblock %}
+    <nav aria-label="footer-pagination">
+        <ul class="pagination pagination-sm justify-content-center">
+            {% if 1 != page_obj.previous_page_number %}
+            <li class="page-item"><a class="page-link paginationPage" id="page_1">1</a></li>
+            {% endif %}
+            {% if page_obj.previous_page_number != 2 and page_obj.number != 2 %}
+            <li class="page-item"><span class="page-link" >...</span></li>
+            {% endif %}
+            {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link paginationPage" id="page_{{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a></li>
+            {% endif %}
+            <li class="page-item"><a class="page-link badge-secondary paginationPage currentPaginationPage" id="page_{{ page_obj.number }}">{{ page_obj.number }}</a></li>
+            {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link paginationPage" id="page_{{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a></li>
+            {% endif %}
+            {% if page_obj.next_page_number != page_obj.paginator.num_pages|add:"-1" and page_obj.number != page_obj.paginator.num_pages|add:"-1" %}
+            <li class="page-item"><span class="page-link">...</span></li>
+            {% endif %}
+            {% if page_obj.paginator.num_pages != page_obj.next_page_number %}
+            <li class="page-item"><a class="page-link paginationPage" id="page_{{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+{% else %}
+<span>No descriptions in the database with such parameters</span>
+{% endif %}

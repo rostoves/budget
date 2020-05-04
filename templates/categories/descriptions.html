@@ -1,0 +1,22 @@
+{% extends "index.html" %}
+{% load static %}
+
+{% block scripts %}
+    <script src="{% static 'js/descriptions.js' %}"></script>
+{% endblock %}
+
+{% block title %}{{ model_name }} List{% endblock %}
+
+{% block content-title %}{{ model_name }} List{% endblock %}
+
+{% block content %}
+    <div>
+        <input class="objectsSearch" id="objectsSearchInput">
+    </div>
+    <div class="objectListContainer">
+        {% include "categories/description_list.html" %}
+    </div>
+
+    <!-- Modal -->
+    {% include "object_delete_with_replacement.html" %}
+{% endblock %}
