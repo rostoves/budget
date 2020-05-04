@@ -1,7 +1,44 @@
 $(document).ready(function () {
-    $('.operationListFilter').on('change', sendFilter);
-    $('.operationListPage').on('click', sendFilter);
+    prepareButtons();
 });
+
+function prepareButtons() {
+    $('.operationListFilter').on('change', sendFilter);
+    $('.paginationPage').on('click', sendFilter);
+    $('.deleteOperationButton').on('click', objectIdToModal);
+    $('#deleteObjectModalButton').on('click', deleteModalAnswer);
+    $('.operationListDate').on('change', sendOperationDateUpdate);
+    $('.operationListComment').on('change', sendOperationCommentUpdate);
+    $('.operationListSum').on('change', sendOperationSumUpdate);
+    $('.operationListMccSelect').on('change', sendOperationMccUpdate);
+}
+
+function sendOperationDateUpdate() {
+    sendFieldUpdate('', 'update_operation', this.id.slice(5), 'date', this.value);
+}
+
+function sendOperationCommentUpdate() {
+    sendFieldUpdate('', 'update_operation', this.id.slice(8), 'comment', this.value);
+}
+
+function sendOperationSumUpdate() {
+    sendFieldUpdate('', 'update_operation', this.id.slice(4), 'bargain_sum', this.value);
+}
+
+function sendOperationMccUpdate() {
+    sendFieldUpdate('', 'update_operation', this.id.slice(11), 'merchant_code_id', this.value);
+}
+
+function objectIdToModal() {
+    $("#deleteObjectModalButton").attr("caller-id", $(this).attr("id"));
+}
+
+function deleteModalAnswer() {
+    let obj = $("#deleteObjectModalButton").attr("caller-id").slice(7);
+    console.log("Operation " + obj + " was deleted.");
+    $("#row_" + obj).remove();
+    sendPOST('', 'delete_operation', obj);
+}
 
 function sendFilter() {
     let status = $('#filter_status').val();
@@ -30,12 +67,12 @@ function sendFilter() {
         },
         complete: function (data) {
             $('.operationsListTableContainer').html(data.responseText);
-            $('.operationListPage').on('click', sendFilter);
+            prepareButtons();
         }
     });
 }
 
 function findPageNumber(object) {
-    let currentPage = $('.currentListPage').length > 0 ? $('.currentListPage').attr('id').slice(5) : '1';
-    return object.classList.contains('operationListPage') ? object.id.slice(5) : currentPage;
+    let currentPage = $('.currentPaginationPage').length > 0 ? $('.currentPaginationPage').attr('id').slice(5) : '1';
+    return object.classList.contains('paginationPage') ? object.id.slice(5) : currentPage;
 }
