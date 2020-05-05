@@ -31,3 +31,12 @@
 .importTableRow {
     grid-template-columns: 160px 70px 70px 90px 80px 90px 80px 160px 430px 300px 90px 80px;
 }
+
+.calculatorForm {
+    margin: 10px 50px auto 500px;
+}
+
+.calculatorFormItem {
+    display: grid;
+    grid-template-columns: 100px 150px;
+}

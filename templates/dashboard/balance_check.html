@@ -1,0 +1,45 @@
+{% extends "index.html" %}
+{% load static %}
+
+{% block styles %}{% endblock %}
+
+{% block scripts %}
+    <script src="{% static '/js/balance_check.js' %}" defer></script>
+{% endblock %}
+
+{% block title %}Balance Check{% endblock %}
+
+{% block content-title %}Balance Check{% endblock %}
+
+{% block content %}
+    <div class="form-group calculatorForm">
+        <div class="form-group form-inline calculatorFormItem">
+            <label for="deposit" class="col-form-label">Deposit</label>
+            <input class="form-control calculatorFormInput" type="number" value="50000" id="deposit">
+        </div>
+        <div class="form-group form-inline calculatorFormItem">
+            <label for="debit" class="col-form-label">Debit</label>
+            <input class="form-control calculatorFormInput" type="number" value="" id="debit">
+        </div>
+        <div class="form-group form-inline calculatorFormItem">
+            <label for="credit" class="col-form-label">Credit</label>
+            <input class="form-control calculatorFormInput" type="number" value="" id="credit">
+        </div>
+        <div class="form-group form-inline calculatorFormItem">
+            <label for="savings" class="col-form-label">Savings</label>
+            <input class="form-control calculatorFormInput" type="number" value="" id="savings">
+        </div>
+        <div class="form-group form-inline calculatorFormItem">
+            <label for="total" class="col-form-label">Total</label>
+            <div id="total"></div>
+        </div>
+        <div class="form-group form-inline calculatorFormItem">
+            <label for="bi_result" class="col-form-label">BI result</label>
+            <input class="form-control calculatorFormInput" type="number" value="" id="bi_result">
+        </div>
+        <div class="form-group form-inline calculatorFormItem">
+            <label for="diff" class="col-form-label">Difference</label>
+            <div id="diff"></div>
+        </div>
+    </div>
+{% endblock %}

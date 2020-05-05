@@ -22,6 +22,14 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="{% url 'dashboard:index' %}">Budget</a>
     <div class="navbar-nav">
+        <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownBalance" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Balance
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownBalance">
+              <a class="dropdown-item" href="{% url 'dashboard:balance_check' %}">Balance Check</a>
+            </div>
+        </div>
         <a class="nav-item nav-link" href="{% url 'operations:operations' %}">Operations</a>
         <a class="nav-item nav-link" href="{% url 'import_data:import_csv' %}">Import</a>
         <div class="nav-item dropdown">
@@ -36,6 +44,7 @@
               <a class="dropdown-item" href="{% url 'categories:descriptions' %}">Descriptions</a>
             </div>
         </div>
+        <a class="nav-item nav-link" href="{% url 'admin:index' %}">Admin</a>
     </div>
     </nav>
     <h4 class="pageHeader">{% block content-title %}{% endblock %}</h4>
