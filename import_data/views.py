@@ -176,7 +176,7 @@ class UpdateRegularPlans(object):
         return result
 
     def update_regular_operations(self):
-        current_planned_date = self.model.objects.filter(description_id__exact=self.plan_desc_id).aggregate(date=TruncDate(Max('date'), tzinfo='Europe/Moscow'))['date']
+        current_planned_date = self.model.objects.filter(description_id__exact=self.plan_desc_id).aggregate(date=TruncDate(Max('date'), tzinfo='UTC'))['date']
         logger.info("Latest date with planned operations: " + str(current_planned_date))
         period_for_planning = self.plan_period - (current_planned_date - self.today).days
 
