@@ -7,6 +7,7 @@ from django.views.generic import FormView
 from django.http import JsonResponse
 from django.db.models import Sum, Max
 from django.db.models.functions import TruncDate
+from django.core.exceptions import ObjectDoesNotExist
 
 from . import forms
 from categories import models as c_models
@@ -57,10 +58,15 @@ class ImportCsvView(FormView):
     @staticmethod
     def find_mcc_for_desc(table):
         for row in table():
-            description = c_models.Description.objects.get(name=row['description'])
-            if description.merchant_code:
-                row['merchant_code_matched'] = description.merchant_code
-            else:
+            try:
+                description = c_models.Description.objects.get(name=row['description'])
+                print(description)
+                if description.merchant_code is not None:
+                    row['merchant_code_matched'] = description.merchant_code
+                else:
+                    row['merchant_code_matched'] = row['merchant_code']
+                print(row['merchant_code_matched'])
+            except ObjectDoesNotExist:
                 row['merchant_code_matched'] = row['merchant_code']
 
         return table
@@ -122,7 +128,7 @@ class ImportTable(object):
         description = c_models.Description.objects.get(id__exact=self.insert_desc(_item['description']))
         merchant_code = c_models.MerchantCode.objects.get(id__exact=self.insert_merchant_code(_item['merchant_code']))
         result = o_models.Operation.objects.get_or_create(date__exact=date,
-                                                          merchant_code__exact=merchant_code,
+                                                          bargain_sum__exact=_item['bargain_sum'],
                                                           description__exact=description,
                                                           defaults={
                                                               'date': date,
