@@ -87,6 +87,7 @@ function collectImportArray() {
 
     sendPOST('', 'import_table', importTableArray, function () {
         renderResultsTable(this);
+        // this['not_inserted'].length > 0 ? renderResultsTable(this) : loadOplistWithOutdatedPlans();
     });
 }
 
@@ -102,3 +103,8 @@ function renderResultsTable(arr) {
         });
     }
 }
+
+// function loadOplistWithOutdatedPlans() {
+//     // window.open("/operations/?filter_applied=True&page=1&status%5B%5D=PLAN&date_to="+getToday(), "_self");
+//
+// }
