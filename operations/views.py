@@ -17,7 +17,7 @@ class OperationListView(ListView):
         # print(request.POST)
         if request.is_ajax():
             if request.POST['action'] == 'delete_operation':
-                result = delete_object('Operation', request.POST['data'].replace('"', ""))
+                result = delete_object('Operation', {'id': request.POST['data'].replace('"', "")})
                 return JsonResponse({'result': result})
             if request.POST['action'] == 'update_operation':
                 result = update_object('Operation', {'id': request.POST['id']},
@@ -105,10 +105,11 @@ class OperationsView(OperationListView):
 
 def update_object(model, filters, updates):
     logger.info('Requested update for ' + model)
+    logger.info('Objects to update: ')
     for k, v in filters.items():
-        logger.info('Objects to update: where ' + k + ' = ' + v)
+        logger.info('where ' + k + ' = ' + str(v))
     for k, v in updates.items():
-        logger.info('Field to update: ' + k + ' to ' + v)
+        logger.info('Field to update: ' + k + ' to ' + str(v))
     objects = None
     if model == 'MerchantCode':
         objects = c_models.MerchantCode.objects
@@ -120,13 +121,16 @@ def update_object(model, filters, updates):
     return result
 
 
-def delete_object(model, pk):
-    logger.warning('Requested deletion of pk=' + pk + ' from ' + model)
+def delete_object(model, filters):
+    logger.warning('Requested delete from ' + model)
+    logger.warning('Objects to delete: ')
+    for k, v in filters.items():
+        logger.warning('where ' + k + ' = ' + str(v))
     objects = None
     if model == 'Operation':
         objects = o_models.Operation.objects
 
-    result = objects.get(pk=pk).delete()[1]
+    result = objects.filter(**filters).delete()[1]
     for k, v in result.items():
         logger.warning('Deleted from ' + k + '. Number of items: ' + str(v))
     return result

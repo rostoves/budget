@@ -22,7 +22,7 @@ class CategoryListView(ListView):
             if request.POST['action'] == 'delete_object_replace':
                 ops_update = update_object('MerchantCode', {'category_id': request.POST['id'].replace('"', "")},
                                            {request.POST['field']: request.POST['new_value'].replace("'", "")})
-                result = delete_object('Category', request.POST['id'].replace('"', ""))
+                result = delete_object('Category', {'id': request.POST['id'].replace('"', "")})
                 return JsonResponse({'merchant_codes_updated': ops_update, 'result': result})
             if request.POST['action'] == 'update_object':
                 result = update_object('Category', {'id': request.POST['id']},
@@ -46,7 +46,7 @@ class MerchantCodeListView(ListView):
             if request.POST['action'] == 'delete_object_replace':
                 ops_update = update_object('Operation', {'merchant_code_id': request.POST['id'].replace('"', "")},
                                            {request.POST['field']: request.POST['new_value'].replace("'", "")})
-                result = delete_object('MerchantCode', request.POST['id'].replace('"', ""))
+                result = delete_object('MerchantCode', {'id': request.POST['id'].replace('"', "")})
                 return JsonResponse({'operations_updated': ops_update, 'result': result})
             if request.POST['action'] == 'update_object':
                 result = update_object('MerchantCode', {'id': request.POST['id']},
@@ -71,7 +71,7 @@ class DescriptionListView(ListView):
             if request.POST['action'] == 'delete_object_replace':
                 ops_update = update_object('Operation', {'description_id': request.POST['id'].replace('"', "")},
                                            {request.POST['field']: request.POST['new_value'].replace("'", "")})
-                result = delete_object('Description', request.POST['id'].replace('"', ""))
+                result = delete_object('Description', {'id': request.POST['id'].replace('"', "")})
                 return JsonResponse({'operations_updated': ops_update, 'result': result})
             if request.POST['action'] == 'update_object':
                 result = update_object('Description', {'id': request.POST['id']},
@@ -127,10 +127,11 @@ class DescriptionsView(DescriptionListView):
 
 def update_object(model, filters, updates):
     logger.info('Requested update for ' + model)
+    logger.info('Objects to update: ')
     for k, v in filters.items():
-        logger.info('Objects to update: where ' + k + ' = ' + v)
+        logger.info('where ' + k + ' = ' + str(v))
     for k, v in updates.items():
-        logger.info('Field to update: ' + k + ' to ' + v)
+        logger.info('Field to update: ' + k + ' to ' + str(v))
     objects = None
     if model == 'MerchantCode':
         objects = c_models.MerchantCode.objects
@@ -146,8 +147,11 @@ def update_object(model, filters, updates):
     return result
 
 
-def delete_object(model, pk):
-    logger.warning('Requested deletion of pk=' + pk + ' from ' + model)
+def delete_object(model, filters):
+    logger.warning('Requested delete from ' + model)
+    logger.warning('Objects to delete: ')
+    for k, v in filters.items():
+        logger.warning('where ' + k + ' = ' + str(v))
     objects = None
     if model == 'MerchantCode':
         objects = c_models.MerchantCode.objects
@@ -156,7 +160,7 @@ def delete_object(model, pk):
     if model == 'Description':
         objects = c_models.Description.objects
 
-    result = objects.get(pk=pk).delete()[1]
+    result = objects.filter(**filters).delete()[1]
     for k, v in result.items():
         logger.warning('Deleted from ' + k + '. Number of items: ' + str(v))
     return result
