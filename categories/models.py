@@ -2,6 +2,7 @@ import logging
 from django.db import models
 
 logger = logging.getLogger('django')
+NOT_DEFINED_CATEGORY_ID = 3
 
 
 class Type(models.Model):
@@ -21,7 +22,9 @@ class Category(models.Model):
 
 class MerchantCode(models.Model):
     name = models.CharField(max_length=128)
-    category = models.ForeignKey('categories.Category', on_delete=models.PROTECT, null=True, related_name='category')
+    category = models.ForeignKey('categories.Category', on_delete=models.PROTECT, null=True, related_name='category',
+                                 default=NOT_DEFINED_CATEGORY_ID)
+    active = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name

@@ -44,12 +44,13 @@ function rowInsertAfter() {
     let bar_sum = "<input class='bargain_sum' id='bar_sum_" + id + "' value='0.00'>";
     let bar_cur = "<span class='bargain_cur' id='bar_cur_" + id + "'>" + $('#bar_cur_'+row)[0].innerText + "</span>";
     let mcc = "<input class='merchant_code importMcc' type='text' id='mcc_" + id + "' value='" + $('#mcc_'+row)[0].value + "'>";
+    let mcc_orig = "<input class='merchant_code_original' type='hidden' id='mcc_orig_" + id + "' value='" + $('#mcc_orig_'+row)[0].value + "'>";
     let desc = "<input class='description' id='desc_" + id + "' value='" + $('#desc_'+row)[0].value + "'>";
     let comment = "<input class='comment' type='text' placeholder='Комментарий'>";
     let deleteImportRowButton = "<button class='deleteImportRowButton' id='delete_" + id + "'>Удалить</button>";
     $( $( "#row_" + row) ).after(
         "<div class='importTableRow' id='row_" + id + "'>"
-        + date + acc + status + op_sum + op_cur + bar_sum + bar_cur + mcc + desc + comment + deleteImportRowButton +
+        + date + acc + status + op_sum + op_cur + bar_sum + bar_cur + mcc + mcc_orig + desc + comment + deleteImportRowButton +
         "</div>"
     );
     autocompleteMcc();

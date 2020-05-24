@@ -3,6 +3,7 @@ $(document).ready(function () {
     $('.comparisonBlockDeleteButton').on('click', objectIdToModal);
     $('#deleteObjectModalButton').on('click', deleteModalAnswer);
     $(".comparisonBlockSelect").on('change', sendComparisonObjectUpdate);
+    $(".activeBlockSelect").on('change', sendActiveObjectUpdate);
 });
 
 function sendObjectNameUpdate() {
@@ -11,6 +12,11 @@ function sendObjectNameUpdate() {
 
 function sendComparisonObjectUpdate() {
     sendFieldUpdate('', 'update_object', this.id.slice(8), 'category_id', this.value);
+}
+
+function sendActiveObjectUpdate() {
+    console.log(this)
+    sendFieldUpdate('', 'update_object', this.id.slice(8), 'active', this.value);
 }
 
 function objectIdToModal() {

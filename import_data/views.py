@@ -25,7 +25,7 @@ class ImportCsvView(FormView):
     def post(self, request, *args, **kwargs):
         if request.is_ajax():
             if request.POST['action'] == 'get_mcc':
-                return JsonResponse(get_column('MerchantCode', 'name'), safe=False)
+                return JsonResponse(get_column('MerchantCode', 'name', {'active': True}), safe=False)
             if request.POST['action'] == 'import_table':
                 insert_result = ImportTable(request.POST['data']).insert()
                 delete_object('Operation', {'description_id__exact': self.plan_desc_id,
@@ -60,12 +60,12 @@ class ImportCsvView(FormView):
         for row in table():
             try:
                 description = c_models.Description.objects.get(name=row['description'])
-                print(description)
+                # print(description)
                 if description.merchant_code is not None:
                     row['merchant_code_matched'] = description.merchant_code
                 else:
                     row['merchant_code_matched'] = row['merchant_code']
-                print(row['merchant_code_matched'])
+                # print(row['merchant_code_matched'])
             except ObjectDoesNotExist:
                 row['merchant_code_matched'] = row['merchant_code']
 
@@ -113,7 +113,7 @@ class ImportTable(object):
 
     @staticmethod
     def insert_merchant_code(mcc):
-        result = c_models.MerchantCode.objects.get_or_create(name__exact=mcc, defaults={'name': mcc})
+        result = c_models.MerchantCode.objects.get_or_create(name__exact=mcc, defaults={'name': mcc, 'category': 3})
         if result[1]:
             logger.info('New merchant code was added: ' + mcc)
         pk = c_models.MerchantCode.objects.filter(name__exact=mcc).values('id')[0]['id']
@@ -127,6 +127,7 @@ class ImportTable(object):
         bargain_cur = c_models.Currency.objects.get(id__exact=self.insert_currency(_item['bargain_cur']))
         description = c_models.Description.objects.get(id__exact=self.insert_desc(_item['description']))
         merchant_code = c_models.MerchantCode.objects.get(id__exact=self.insert_merchant_code(_item['merchant_code']))
+        merchant_code_original = c_models.MerchantCode.objects.get(id__exact=self.insert_merchant_code(_item['merchant_code_original']))
         result = o_models.Operation.objects.get_or_create(date__exact=date,
                                                           bargain_sum__exact=_item['bargain_sum'],
                                                           description__exact=description,
@@ -139,6 +140,7 @@ class ImportTable(object):
                                                               'bargain_sum': _item['bargain_sum'],
                                                               'bargain_cur': bargain_cur,
                                                               'merchant_code': merchant_code,
+                                                              'merchant_code_original': merchant_code_original,
                                                               'description': description,
                                                               'comment': _item['comment']
                                                           })
@@ -186,32 +188,33 @@ class UpdateRegularPlans(object):
         logger.info("Latest date with planned operations: " + str(current_planned_date))
         period_for_planning = self.plan_period - (current_planned_date - self.today).days
 
-        date_list = date_range(current_planned_date, periods=period_for_planning, normalize=True).tolist()
-        for date in date_list:
-            logger.info("New date for planning: : " + str(date))
-        for entry in self.regulars:
-            update_object('Operation', {'merchant_code_id': entry['merchant_code'], 'description_id': self.plan_desc_id},
-                          {'bargain_sum': entry['bargain_sum']})
-
+        date_list = date_range(current_planned_date + timedelta(days=1), periods=period_for_planning, normalize=True).tolist()
+        if date_list:
+            logger.info("Number of days for planning: " + str(len(date_list)))
             for date in date_list:
-                result = self.model.objects.update_or_create(merchant_code_id__exact=entry['merchant_code'],
-                                                             description_id__exact=self.plan_desc_id,
-                                                             date__exact=date,
-                                                             defaults={
-                                                                'date': date,
-                                                                'account_id': self.plan_account,
-                                                                'status': self.plan_status,
-                                                                'operation_sum': entry['bargain_sum'],
-                                                                'operation_cur_id': self.plan_cur,
-                                                                'bargain_sum': entry['bargain_sum'],
-                                                                'bargain_cur_id': self.plan_cur,
-                                                                'merchant_code_id': entry['merchant_code'],
-                                                                'description_id': self.plan_desc_id
-                                                             })
-                if result[1]:
-                    logger.info("New operation planned: : " + str(result[0]))
-                else:
-                    logger.info("Operation already planned: : " + str(result[0]))
+                logger.info("New date for planning: : " + str(date))
+        else:
+            logger.info("No dates for planning")
+
+        for record in self.regulars:
+            update_object('Operation', {'merchant_code_id': record['merchant_code'], 'description_id': self.plan_desc_id},
+                          {'bargain_sum': record['bargain_sum']})
+
+            if date_list:
+                objs = []
+                for date in date_list:
+                    objs.append(self.model(date=date,
+                                           account_id=self.plan_account,
+                                           status=self.plan_status,
+                                           operation_sum=record['bargain_sum'],
+                                           operation_cur_id=self.plan_cur,
+                                           bargain_sum=record['bargain_sum'],
+                                           bargain_cur_id=self.plan_cur,
+                                           merchant_code_id=record['merchant_code'],
+                                           description_id=self.plan_desc_id))
+
+                result = self.model.objects.bulk_create(objs)
+                logger.info("Planned operations: " + str(len(result)) + " for " + record['merchant_code__name'])
 
 
 def update_object(model, filters, updates):
@@ -247,14 +250,14 @@ def delete_object(model, filters):
     return result
 
 
-def get_column(model, column):
+def get_column(model, column, filters):
     logger.info('Requested ' + column + ' from ' + model)
     objects = None
     array = []
     if model == 'Description':
         objects = c_models.Description.objects
     if model == 'MerchantCode':
-        objects = c_models.MerchantCode.objects
+        objects = c_models.MerchantCode.objects.filter(**filters)
     if model == 'Operation':
         objects = o_models.Operation.objects
 

@@ -35,6 +35,7 @@
             <input class="bargain_sum" type="text" id="bar_sum_{{ forloop.counter }}" value="{{ row.bargain_sum }}">
             <span class="bargain_cur" id="bar_cur_{{ forloop.counter }}">{{ row.bargain_cur }}</span>
             <input class="merchant_code importMcc" type="text" id="mcc_{{ forloop.counter }}" value="{{ row.merchant_code_matched }}">
+            <input class="merchant_code_original" type="hidden" id="mcc_orig_{{ forloop.counter }}" value="{{ row.merchant_code }}">
             <input class="description" type="text" id="desc_{{ forloop.counter }}" value="{{ row.description }}">
             <input class="comment" type="text" placeholder="Комментарий">
             <button class='splitImportRowButton' id="split_{{ forloop.counter }}">Разделить</button>

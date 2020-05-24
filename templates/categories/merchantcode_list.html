@@ -18,6 +18,10 @@
                 <option {% if comparison.name == object.category.name %}selected{% endif %} value="{{ comparison.id }}">{{ comparison.name }}</option>
                 {% endfor %}
             </select>
+            <select class="activeBlockSelect" id="obj_act_{{ object.id }}">
+                <option {% if object.active == True %}selected{% endif %} value="True">Active</option>
+                <option {% if object.active == False %}selected{% endif %} value="False">Not active</option>
+            </select>
             <button type="button" class="comparisonBlockDeleteButton" id="delete_{{ object.id }}" data-toggle="modal" data-target="#deleteModal">Удалить</button>
         </div>
     {% endfor %}
