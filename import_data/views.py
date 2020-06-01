@@ -62,10 +62,12 @@ class ImportCsvView(FormView):
                 description = c_models.Description.objects.get(name=row['description'])
                 if description.merchant_code is not None:
                     row['merchant_code_matched'] = description.merchant_code
-                    logger.info("Found Merchant Code " + description.merchant_code + "for Description: " + description)
+                    logger.info("Found Merchant Code " + str(description.merchant_code) +
+                                "for Description: " + str(description))
                 else:
                     row['merchant_code_matched'] = row['merchant_code']
-                    logger.info("No specific Merchant Code for Description: " + description + ". Will keep: " + row['merchant_code_matched'])
+                    logger.info("No specific Merchant Code for Description: " + str(description) +
+                                ". Will keep: " + row['merchant_code_matched'])
             except ObjectDoesNotExist:
                 row['merchant_code_matched'] = row['merchant_code']
 
@@ -90,7 +92,7 @@ class ImportTable(object):
 
     @staticmethod
     def insert_currency(currency):
-        logger.info('Trying to add new currency: ' + currency)
+        logger.info('Looking for currency: ' + currency)
         result = c_models.Currency.objects.get_or_create(code__exact=currency, defaults={'code': currency})
         if result[1]:
             logger.info('New currency was added: ' + currency)
@@ -99,7 +101,7 @@ class ImportTable(object):
 
     @staticmethod
     def insert_account(account):
-        logger.info('Trying to add new account: ' + account)
+        logger.info('Looking for account: ' + account)
         result = o_models.Account.objects.get_or_create(number__exact=account, defaults={'number': account})
         if result[1]:
             logger.info('New account was added: ' + account)
@@ -108,7 +110,7 @@ class ImportTable(object):
 
     @staticmethod
     def insert_desc(desc):
-        logger.info('Trying to add new description: ' + desc)
+        logger.info('Looking for description: ' + desc)
         result = c_models.Description.objects.get_or_create(name__exact=desc, defaults={'name': desc})
         if result[1]:
             logger.info('New description was added: ' + desc)
@@ -117,7 +119,7 @@ class ImportTable(object):
 
     @staticmethod
     def insert_merchant_code(mcc):
-        logger.info('Trying to add new merchant code: ' + mcc)
+        logger.info('Looking for merchant code: ' + mcc)
         result = c_models.MerchantCode.objects.get_or_create(name__exact=mcc, defaults={'name': mcc})
         if result[1]:
             logger.info('New merchant code was added: ' + mcc)
