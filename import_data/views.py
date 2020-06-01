@@ -60,12 +60,12 @@ class ImportCsvView(FormView):
         for row in table():
             try:
                 description = c_models.Description.objects.get(name=row['description'])
-                # print(description)
                 if description.merchant_code is not None:
                     row['merchant_code_matched'] = description.merchant_code
+                    logger.info("Found Merchant Code " + description.merchant_code + "for Description: " + description)
                 else:
                     row['merchant_code_matched'] = row['merchant_code']
-                # print(row['merchant_code_matched'])
+                    logger.info("No specific Merchant Code for Description: " + description + ". Will keep: " + row['merchant_code_matched'])
             except ObjectDoesNotExist:
                 row['merchant_code_matched'] = row['merchant_code']
 
@@ -78,6 +78,7 @@ class ImportTable(object):
         self.insert_result = {'inserted': [], 'not_inserted': []}
 
     def insert(self):
+        logger.info('Got array for insert. Number of operations: ' + str(len(self.operations_array)))
         for item in self.operations_array:
             result = self.insert_operation(self, item)
             print(result)
@@ -89,6 +90,7 @@ class ImportTable(object):
 
     @staticmethod
     def insert_currency(currency):
+        logger.info('Trying to add new currency: ' + currency)
         result = c_models.Currency.objects.get_or_create(code__exact=currency, defaults={'code': currency})
         if result[1]:
             logger.info('New currency was added: ' + currency)
@@ -97,6 +99,7 @@ class ImportTable(object):
 
     @staticmethod
     def insert_account(account):
+        logger.info('Trying to add new account: ' + account)
         result = o_models.Account.objects.get_or_create(number__exact=account, defaults={'number': account})
         if result[1]:
             logger.info('New account was added: ' + account)
@@ -105,6 +108,7 @@ class ImportTable(object):
 
     @staticmethod
     def insert_desc(desc):
+        logger.info('Trying to add new description: ' + desc)
         result = c_models.Description.objects.get_or_create(name__exact=desc, defaults={'name': desc})
         if result[1]:
             logger.info('New description was added: ' + desc)
@@ -113,7 +117,8 @@ class ImportTable(object):
 
     @staticmethod
     def insert_merchant_code(mcc):
-        result = c_models.MerchantCode.objects.get_or_create(name__exact=mcc, defaults={'name': mcc, 'category': 3})
+        logger.info('Trying to add new merchant code: ' + mcc)
+        result = c_models.MerchantCode.objects.get_or_create(name__exact=mcc, defaults={'name': mcc})
         if result[1]:
             logger.info('New merchant code was added: ' + mcc)
         pk = c_models.MerchantCode.objects.filter(name__exact=mcc).values('id')[0]['id']
@@ -121,6 +126,7 @@ class ImportTable(object):
 
     @staticmethod
     def insert_operation(self, _item):
+        logger.info('Trying to add new operation. ID in insert array: ' + str(_item['id']))
         date = datetime.strptime(_item['date'], '%d.%m.%Y %H:%M:%S')
         account = o_models.Account.objects.get(id__exact=self.insert_account(_item['account']))
         operation_cur = c_models.Currency.objects.get(id__exact=self.insert_currency(_item['operation_cur']))
