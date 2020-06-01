@@ -28,6 +28,7 @@
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownBalance">
               <a class="dropdown-item" href="{% url 'dashboard:balance_check' %}">Balance Check</a>
+              <a class="dropdown-item" href="{% url 'dashboard:balance' %}">Balance</a>
             </div>
         </div>
         <a class="nav-item nav-link" href="{% url 'operations:operations' %}">Operations</a>
@@ -48,8 +49,8 @@
     </div>
     </nav>
     <h4 class="pageHeader">{% block content-title %}{% endblock %}</h4>
-    <div>
-        {% block content %}{% endblock %}
-    </div>
+    {% block content %}
+
+    {% endblock %}
 </body>
 </html>
