@@ -50,7 +50,7 @@ class ImportCsvView(FormView):
                          decimal=",",
                          names=['date', 'bargain_date', 'account', 'status', 'operation_sum', 'operation_cur',
                                 'bargain_sum', 'bargain_cur', 'cashback', 'merchant_code', 'mcc', 'description',
-                                'bonuses'])
+                                'bonuses', 'round', 'round_sum'])
 
         table = table.iloc[::-1].T.to_dict()
         return table.values
