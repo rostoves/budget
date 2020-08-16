@@ -5,7 +5,7 @@ $(document).ready(function () {
 function calcBalance() {
     var deposit = parseFloat($('#deposit')[0].value);
     var debit = parseFloat($('#debit')[0].value);
-    var credit = -282000+parseFloat($('#credit')[0].value);
+    var credit = -390000+parseFloat($('#credit')[0].value);
     var savings = parseFloat($('#savings')[0].value);
     var bi_result = parseFloat($('#bi_result')[0].value);
 

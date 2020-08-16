@@ -11,3 +11,6 @@
 *.sqlite3
 /static/bootstrap-4.4.1-dist/
 /static/jquery/
+/static/fusionchart/
+*.bat
+*.txt
