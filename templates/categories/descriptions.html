@@ -11,9 +11,14 @@
 
 {% block content %}
     <div>
-        <input class="objectsSearch" id="objectsSearchInput">
+        <input class="objectsSearch" id="objectsSearchInput" placeholder="search">
     </div>
     <div class="objectListContainer">
+        <div class="comparisonBlockHeader badge-dark">
+            <span>Description</span>
+            <span>Merchant Code</span>
+            <span> </span>
+        </div>
         {% include "categories/description_list.html" %}
     </div>
 

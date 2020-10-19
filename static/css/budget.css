@@ -6,7 +6,9 @@
 .operationsListTable,
 .oplistButtonForm,
 .importButtonForm,
-.importTable {
+.importTable,
+.comparisonBlockHeader,
+.comparisonBlock {
     margin: 10px 10px 10px 10px;
 }
 
@@ -30,6 +32,19 @@
 .importTableHeader,
 .importTableRow {
     grid-template-columns: 160px 70px 70px 90px 80px 90px 80px 160px 430px 300px 90px 80px;
+}
+
+.comparisonBlockHeader,
+.comparisonBlock {
+    display: grid;
+    grid-gap: 2px;
+    text-align: center;
+    grid-template-columns: 300px 200px 100px 80px
+}
+
+.objectsSearch {
+    margin: 0 0 0 10px;
+    width: 300px;
 }
 
 .calculatorForm {

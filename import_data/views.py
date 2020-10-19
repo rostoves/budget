@@ -63,7 +63,7 @@ class ImportCsvView(FormView):
                 if description.merchant_code is not None:
                     row['merchant_code_matched'] = description.merchant_code
                     logger.info("Found Merchant Code " + str(description.merchant_code) +
-                                "for Description: " + str(description))
+                                " for Description: " + str(description))
                 else:
                     row['merchant_code_matched'] = row['merchant_code']
                     logger.info("No specific Merchant Code for Description: " + str(description) +

@@ -34,6 +34,7 @@ class CategoryListView(ListView):
         context['object_list'] = self.model.objects.all().order_by('name')
         context['model_name'] = self.model.__name__
         context['comparison_list'] = c_models.Type.objects.all().order_by('name')
+        context['object_list_full'] = context['object_list']
         return context
 
 
@@ -58,6 +59,7 @@ class MerchantCodeListView(ListView):
         context['object_list'] = self.model.objects.all().order_by('name')
         context['model_name'] = self.model.__name__
         context['comparison_list'] = c_models.Category.objects.all().order_by('name')
+        context['object_list_full'] = context['object_list']
         return context
 
 
@@ -103,6 +105,7 @@ class DescriptionListView(ListView):
         context = super(DescriptionListView, self).get_context_data(**kwargs)
         context['model_name'] = self.model.__name__
         context['comparison_list'] = self.get_comparison_list()
+        context['object_list_full'] = self.model.objects.all().order_by('name')
         return context
 
 

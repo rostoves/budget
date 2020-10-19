@@ -14,7 +14,7 @@
                     <div class="col-sm-6">
                         <select class="form-control" id="newObjectSelect">
                             <option selected value> -- choose -- </option>
-                            {% for object in object_list %}
+                            {% for object in object_list_full %}
                             <option value="{{ object.id }}">{{ object.name }}</option>
                             {% endfor %}
                         </select>
