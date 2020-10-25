@@ -49,6 +49,7 @@
             <option selected value="DESC">Newest</option>
             <option value="ASC">Oldest</option>
         </select>
+        <span type="button" class="addOperationButton" id="addOperationButton" data-toggle="modal" data-target="#addOperationModal">Добавить операцию</span>
     </form>
     <div class="operationsListTableContainer">
         {% include "operations/operation_list.html" %}
@@ -56,5 +57,6 @@
 
     <!-- Modal -->
     {% include "object_confirm_delete.html" %}
+    {% include "operations/operation_add.html" %}
 
 {% endblock %}

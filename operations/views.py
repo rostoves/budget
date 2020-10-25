@@ -5,6 +5,7 @@ from django.core.paginator import Paginator
 from django.http import JsonResponse
 from operations import (models as o_models, forms)
 from categories import models as c_models
+from import_data import views as i_views
 
 logger = logging.getLogger('django')
 
@@ -23,6 +24,11 @@ class OperationListView(ListView):
                 result = update_object('Operation', {'id': request.POST['id']},
                                        {request.POST['field']: request.POST['new_value']})
                 return JsonResponse({'rows_updated': result})
+            if request.POST['action'] == 'add_operation':
+                insert_result = i_views.ImportTable(request.POST['data']).insert()
+                return JsonResponse(insert_result, safe=False)
+
+
 
     def get_filters(self):
         # print(self.request.GET)
@@ -82,6 +88,7 @@ class OperationListView(ListView):
         context['merchant_code'] = get_row_and_id('MerchantCode', 'name')
         context['category'] = get_row_and_id('Category', 'name')
         context['type'] = get_row_and_id('Type', 'name')
+        context['account'] = get_row_and_id('Account', 'number')
         context['orderby'] = self.request.GET.get('orderby')
         return context
 
@@ -99,7 +106,9 @@ class OperationsView(OperationListView):
             operation_list_page = paginator.page(page_number).object_list if True else ''
 
             return render(request, 'operations/operation_list.html', {'operation_list': operation_list_page,
-                                                                      'page_obj': page_obj})
+                                                                      'page_obj': page_obj,
+                                                                      'merchant_code': get_row_and_id('MerchantCode',
+                                                                                                      'name')})
         return super().get(request, *args, **kwargs)
 
 
@@ -161,6 +170,8 @@ def get_row_and_id(model, column):
         objects = c_models.Category.objects
     if model == 'Type':
         objects = c_models.Type.objects
+    if model == 'Account':
+        objects = o_models.Account.objects
 
     for result in list(objects.values(column, 'id').order_by(column).distinct()):
         array[result['id']] = result[column]

@@ -1,0 +1,93 @@
+<div class="modal fade" id="addOperationModal" tabindex="-1" role="dialog" aria-labelledby="addOperationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addOperationModalLabel">Adding operation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body ui-front">
+                <div class="form-group row">
+                    <label for="addOperationStatus" class="col-sm-3 col-form-label">Status</label>
+                    <div class="col-sm-9">
+                        <select class="form-control" id="addOperationStatus">
+                            <option value="OK">OK</option>
+                            <option selected value="PLAN">PLAN</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="addOperationDate" class="col-sm-3 col-form-label">Date</label>
+                    <div class="col-sm-9">
+                        <input class="form-control" type="date" id="addOperationDate">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="addOperationDateRepeat">
+                            <label class="form-check-label" for="addOperationDateRepeat">Repeat</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <input class="form-control" type="number" placeholder="1" value="1" id="addOperationRepeatCount">
+                    </div>
+                    <div class="col-sm-2">
+                        <label class="col-form-label" for="addOperationRepeatCount">time(s)</label>
+                    </div>
+                    <div class="col-sm-4">
+                        <select class="form-control" id="addOperationDatePeriod">
+                            <option selected value="month">monthly</option>
+                            <option value="week">weekly</option>
+                            <option value="day">daily</option>
+                            <option value="year">yearly</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="addOperationAccount" class="col-sm-3 col-form-label">Card</label>
+                    <div class="col-sm-9">
+                        <select class="form-control" id="addOperationAccount">
+                            {% for key, value in account.items %}
+                            <option value="{{ value }}">{{ value }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="addOperationSum" class="col-sm-3 col-form-label">Sum</label>
+                    <div class="col-sm-9">
+                        <input class="form-control" type="number" placeholder="Sum" id="addOperationSum">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="addOperationMcc" class="col-sm-3 col-form-label">MCC</label>
+                    <div class="col-sm-9">
+                        <select class="form-control" id="addOperationMcc">
+                            {% for key, value in merchant_code.items %}
+                            <option value="{{ value }}">{{ value }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="addOperationDesc" class="col-sm-3 col-form-label">Description</label>
+                    <div class="col-sm-9">
+                        <input class="form-control" type="text" placeholder="Description" id="addOperationDesc">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="addOperationComment" class="col-sm-3 col-form-label">Comment</label>
+                    <div class="col-sm-9">
+                        <input class="form-control" type="text" placeholder="Comment" id="addOperationComment">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Nope</button>
+                <button type="button" class="btn btn-success addOperationModalButton" id="addOperationModalButton" data-dismiss="modal">Add</button>
+            </div>
+        </div>
+    </div>
+</div>

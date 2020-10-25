@@ -90,6 +90,7 @@ class ImportTable(object):
                 self.insert_result['not_inserted'].append(result['id'])
         return self.insert_result
 
+
     @staticmethod
     def insert_currency(currency):
         logger.info('Looking for currency: ' + currency)
@@ -129,13 +130,17 @@ class ImportTable(object):
     @staticmethod
     def insert_operation(self, _item):
         logger.info('Trying to add new operation. ID in insert array: ' + str(_item['id']))
-        date = datetime.strptime(_item['date'], '%d.%m.%Y %H:%M:%S')
         account = o_models.Account.objects.get(id__exact=self.insert_account(_item['account']))
         operation_cur = c_models.Currency.objects.get(id__exact=self.insert_currency(_item['operation_cur']))
         bargain_cur = c_models.Currency.objects.get(id__exact=self.insert_currency(_item['bargain_cur']))
         description = c_models.Description.objects.get(id__exact=self.insert_desc(_item['description']))
         merchant_code = c_models.MerchantCode.objects.get(id__exact=self.insert_merchant_code(_item['merchant_code']))
-        merchant_code_original = c_models.MerchantCode.objects.get(id__exact=self.insert_merchant_code(_item['merchant_code_original']))
+        if _item['manual_insert']:
+            date = datetime.strptime(_item['date'][:-1], '%Y-%m-%dT%H:%M:%S.%f') + timedelta(hours=3)
+            merchant_code_original = merchant_code
+        else:
+            date = datetime.strptime(_item['date'], '%d.%m.%Y %H:%M:%S')
+            merchant_code_original = c_models.MerchantCode.objects.get(id__exact=self.insert_merchant_code(_item['merchant_code_original']))
         result = o_models.Operation.objects.get_or_create(date__exact=date,
                                                           bargain_sum__exact=_item['bargain_sum'],
                                                           description__exact=description,
