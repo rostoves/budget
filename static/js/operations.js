@@ -108,7 +108,7 @@ function addOperation() {
         for (let i = 1; i < $('#addOperationRepeatCount')[0].value; i++) {
             operation.push({
                 'id': i + 1,
-                'manual_insert': 1,
+                'manual_insert': true,
                 'date': calculateRepeatDate(date, i, $('#addOperationDatePeriod')[0].value),
                 'account': account,
                 'status': status,

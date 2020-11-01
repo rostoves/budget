@@ -135,7 +135,7 @@ class ImportTable(object):
         bargain_cur = c_models.Currency.objects.get(id__exact=self.insert_currency(_item['bargain_cur']))
         description = c_models.Description.objects.get(id__exact=self.insert_desc(_item['description']))
         merchant_code = c_models.MerchantCode.objects.get(id__exact=self.insert_merchant_code(_item['merchant_code']))
-        if _item['manual_insert']:
+        if 'manual_insert' in _item and _item['manual_insert']:
             date = datetime.strptime(_item['date'][:-1], '%Y-%m-%dT%H:%M:%S.%f') + timedelta(hours=3)
             merchant_code_original = merchant_code
         else:
